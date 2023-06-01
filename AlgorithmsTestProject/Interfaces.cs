@@ -46,6 +46,7 @@ public interface IPriorityQueue<T>
     void Enqueue(int priority, T element);
     T PeekHighestPriority();
     T DequeueHighestPriority();
+    bool IsEmpty { get; }
 }
 
 public interface IIterator<T>
@@ -53,11 +54,6 @@ public interface IIterator<T>
     T GetElement();
     bool HasValue();
     IIterator<T> GetNext();
-}
-
-public interface ISequence<T>
-{
-    IIterator<T> GetIterator();
 }
 
 public interface ISequence<T, TIterator>
@@ -75,16 +71,28 @@ public interface IList<T, TIterator>
     TIterator Remove(TIterator iterator);
 }
 
-public interface ITree<T>
+public interface ISequence<T>
 {
-    T Value { get; }
-    IEnumerable<ITree<T>> Subtrees { get; }
+    IIterator<T> GetIterator();
+}
+
+public interface IList<T>
+    : ISequence<T>
+{
+    IIterator<T> Insert(IIterator<T> iterator, T item);
+    IIterator<T> Remove(IIterator<T> iterator);
 }
 
 public interface ITree<T, TNode>
 {
     T GetValue(TNode node);
     IEnumerable<TNode> GetChildren(TNode node);
+}
+
+public interface ITree<T>
+{
+    T Value { get; }
+    IEnumerable<ITree<T>> Subtrees { get; }
 }
 
 public interface IBinaryTree<T> : ITree<T>
@@ -153,4 +161,11 @@ public interface IOutputStream<T>
 {
     void Close();
     void Write(T x); 
+}
+
+public interface IConsList<T>
+{
+    T Value { get; }
+    bool IsEmpty { get; }
+    IConsList<T> Rest { get; }
 }
